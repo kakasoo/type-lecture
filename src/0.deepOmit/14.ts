@@ -37,7 +37,7 @@ namespace CodeSpace {
     },
   };
 
-  type DeepOmitHelper<T extends string, First extends string> = T extends `${First}.${infer Rest}` ? Rest : never;
+  type GetMember<T extends string, First extends string> = T extends `${First}.${infer Rest}` ? Rest : never;
   /**
    * 최소한 Omit 정도로 동작하게끔 미리 구현
    *
@@ -53,7 +53,7 @@ namespace CodeSpace {
            * 1. 즉, `.`로 이어진 문자일 경우 앞의 문자가 `${key}`일 경우에 뒤의 키만을 뽑아야 한다.
            * 2. 만약 그렇지 않다면, ( = `${key}.` 을 포함하는 문자열 타입이 아니라면 ) 그냥 아무것도 안 뺀 객체를 주면 된다.
            */
-          DeepOmit<T[key], DeepOmitHelper<K, key> extends DeepObjectKeys<T[key]> ? DeepOmitHelper<K, key> : never>
+          DeepOmit<T[key], GetMember<K, key> extends DeepObjectKeys<T[key]> ? GetMember<K, key> : never>
         : never
       : T[key];
   };
