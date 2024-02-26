@@ -11,7 +11,7 @@ namespace CodeSpace {
     ? T[P] extends ValueType
       ? P
       : T[P] extends object
-        ? `${P}.${DeepObjectKeys<T[P]>}`
+        ? `${P}` | `${P}.${DeepObjectKeys<T[P]>}`
         : never
     : never;
 
@@ -46,22 +46,12 @@ namespace CodeSpace {
     };
   }
 
-  type Answer = DeepOmit<NestedObject, "propertyC.propertyE.propertyG.propertyH">;
+  type Answer = DeepOmit<NestedObject, "propertyC.propertyE.propertyG.propertyH" | "propertyC.propertyE">;
   const answer: Answer = {
     propertyA: "",
     propertyB: 0,
     propertyC: {
       propertyD: false,
-      propertyE: {
-        propertyF: "",
-        propertyG: {
-          propertyI: {
-            propertyJ: false,
-            propertyL: 1n,
-            propertyK: new Date(),
-          },
-        },
-      },
     },
   };
 }

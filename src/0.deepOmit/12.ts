@@ -57,7 +57,7 @@ namespace CodeSpace {
     ? T[P] extends ValueType // T[P]가 객체가 아니라면 키를 수집한다.
       ? P
       : T[P] extends object // T[P]가 객체라면 재귀적으로 순회하며 `P.` 문자열 다음으로 붙여준다.
-        ? `${P}.${DeepObjectKeys<T[P]>}`
+        ? `${P}` | `${P}.${DeepObjectKeys<T[P]>}`
         : never
     : never;
 

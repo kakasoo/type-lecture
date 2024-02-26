@@ -1,11 +1,14 @@
 /**
  * DeepPick 구현하기
- *
- * DeepOmit이 이미 구현되어 있다면.
  */
 namespace CodeSpace {
   type GetMember<T extends string, First extends string> = T extends `${First}.${infer Rest}` ? Rest : never;
 
+  /**
+   * DeepOmit에서 구현한 것과 달리
+   * T[P]가 객체 타입인 경우 `${P}` | `${P}.${DeepObjectKeys<T[P]>}`가 아닌,
+   * `${P}.${DeepObjectKeys<T[P]>}` 만으로 추론되게 한다.
+   */
   type DeepObjectKeys<T extends object, P extends keyof T = keyof T> = P extends string
     ? T[P] extends ValueType
       ? P
