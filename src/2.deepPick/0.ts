@@ -13,7 +13,7 @@ namespace CodeSpace {
     ? T[P] extends ValueType
       ? P
       : T[P] extends object
-        ? `${P}.${DeepObjectKeys<T[P]>}`
+        ? `${P}` | `${P}.${DeepObjectKeys<T[P]>}`
         : never
     : never;
 

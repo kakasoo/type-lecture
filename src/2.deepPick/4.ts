@@ -17,6 +17,14 @@ namespace CodeSpace {
         : never
     : never;
 
+  type DeepObjectKeysIsObject<T extends object, P extends keyof T = keyof T> = P extends string
+    ? T[P] extends ValueType
+      ? never
+      : T[P] extends object
+        ? `${P}` | `${P}.${DeepObjectKeysIsObject<T[P]>}`
+        : never
+    : never;
+
   type ValueType = number | boolean | string | null | undefined | symbol | bigint | Date;
 
   type DeepOmit<T extends object, K extends DeepObjectKeys<T>> = {
@@ -29,7 +37,16 @@ namespace CodeSpace {
       : T[key];
   };
 
-  type DeepPick<T extends object, K extends DeepObjectKeys<T>> = DeepOmit<T, Exclude<DeepObjectKeys<T>, K>>;
+  type DeepPick<T extends object, K extends DeepObjectKeys<T>> = DeepOmit<
+    T,
+    Exclude<
+      DeepObjectKeys<T>,
+      | K // 이것 외에 지운다고 가정했던 코드에서,
+      | "K에 명시된 키가 객체를 가리키며 부모 객체가 존재할 경우 부모 객체도 지워서는 안 된다." // 이것도 제외하고 지워야 한다.
+    >
+  >;
+
+  type a = DeepObjectKeysIsObject<NestedObject>;
 
   interface NestedObject {
     propertyA: string;

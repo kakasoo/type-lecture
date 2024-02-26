@@ -1,5 +1,7 @@
 /**
- * DeepPick 구현하기
+ * DeepPick 구현하기 (완성)
+ *
+ * 객체의 맨 끝 값을 지울 때 부모 객체는 Omit 하지 않게 처리
  */
 namespace CodeSpace {
   type GetMember<T extends string, First extends string> = T extends `${First}.${infer Rest}` ? Rest : never;
@@ -17,6 +19,14 @@ namespace CodeSpace {
         : never
     : never;
 
+  type DeepObjectKeysIsObject<T extends object, P extends keyof T = keyof T> = P extends string
+    ? T[P] extends ValueType
+      ? never
+      : T[P] extends object
+        ? `${P}` | `${P}.${DeepObjectKeysIsObject<T[P]>}`
+        : never
+    : never;
+
   type ValueType = number | boolean | string | null | undefined | symbol | bigint | Date;
 
   type DeepOmit<T extends object, K extends DeepObjectKeys<T>> = {
@@ -29,7 +39,26 @@ namespace CodeSpace {
       : T[key];
   };
 
-  type DeepPick<T extends object, K extends DeepObjectKeys<T>> = DeepOmit<T, Exclude<DeepObjectKeys<T>, K>>;
+  /**
+   * @example
+   * type A = RemoveLastProperty<"a.b.c.d.e.f.g"> // "a" | "a.b" | "a.b.c" | "a.b.c.d" | "a.b.c.d.e" | "a.b.c.d.e.f"
+   */
+  type RemoveLastProperty<S extends string> = S extends `${infer First}.${infer Last}`
+    ? `${First}` | `${First}.${RemoveLastProperty<Last>}`
+    : never;
+
+  type A = RemoveLastProperty<"a.b.c.d.e.f.g">;
+
+  type DeepPick<T extends object, K extends DeepObjectKeys<T>> = DeepOmit<
+    T,
+    Exclude<
+      DeepObjectKeys<T>,
+      | K // 이것 외에 지운다고 가정했던 코드에서,
+      | RemoveLastProperty<K> // 이것도 제외하고 지워야 한다.
+    >
+  >;
+
+  type a = DeepObjectKeysIsObject<NestedObject>;
 
   interface NestedObject {
     propertyA: string;
@@ -50,12 +79,6 @@ namespace CodeSpace {
     };
   }
 
-  /**
-   * propertyB는 추론된다.
-   * propertyC.propertyE.propertyG.propertyI.propertyL는 안 된다.
-   *
-   * propertyC.propertyE.propertyG.propertyI.propertyL를 넣을 때 그 외의 모든 것을 DeepOmit하는 코드가, PropertyC까지 Omit해서 부모 객체가 사라졌기 떄문
-   */
   type Answer1 = DeepPick<NestedObject, "propertyC.propertyE.propertyG.propertyI.propertyL" | "propertyB">;
   const a1: Answer1 = {
     propertyB: 1,
