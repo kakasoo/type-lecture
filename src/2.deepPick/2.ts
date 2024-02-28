@@ -29,5 +29,9 @@ namespace CodeSpace {
       : T[key];
   };
 
+  /**
+   * Pick은 명시된 것만 가져오는 기능이므로,
+   * 명시된 것만 제외하고 나머지를 모두 Omit하는 것과 동일해야 한다.
+   */
   type DeepPick<T extends object, K extends DeepObjectKeys<T>> = DeepOmit<T, Exclude<DeepObjectKeys<T>, K>>;
 }

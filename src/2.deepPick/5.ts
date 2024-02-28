@@ -79,15 +79,13 @@ namespace CodeSpace {
     };
   }
 
-  type Answer1 = DeepPick<NestedObject, "propertyC.propertyE.propertyG.propertyI.propertyL" | "propertyB">;
+  type Answer1 = DeepPick<NestedObject, "propertyC.propertyE.propertyF" | "propertyC.propertyE.propertyG.propertyH">;
   const a1: Answer1 = {
-    propertyB: 1,
     propertyC: {
       propertyE: {
+        propertyF: "",
         propertyG: {
-          propertyI: {
-            propertyL: 1n,
-          },
+          propertyH: 0,
         },
       },
     },

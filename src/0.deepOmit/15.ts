@@ -46,12 +46,25 @@ namespace CodeSpace {
     };
   }
 
-  type Answer = DeepOmit<NestedObject, "propertyC.propertyE.propertyG.propertyH" | "propertyC.propertyE">;
+  type Answer = DeepOmit<
+    NestedObject,
+    "propertyC.propertyE.propertyG.propertyH" | "propertyC.propertyE.propertyG.propertyI.propertyK"
+  >;
+
   const answer: Answer = {
     propertyA: "",
     propertyB: 0,
     propertyC: {
       propertyD: false,
+      propertyE: {
+        propertyF: "",
+        propertyG: {
+          propertyI: {
+            propertyJ: false,
+            propertyL: 0n,
+          },
+        },
+      },
     },
   };
 }
